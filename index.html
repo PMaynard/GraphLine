@@ -67,9 +67,8 @@ var src = `Become Root
 
 src.split("\n").forEach((e) =>
   cy.add({data: { id: 'node' + cy.nodes().length, label: e.trim()}})
-); 
-
-cy.layout({name: 'breadthfirst'}).run()
+);
+cy.layout({name: 'cose'}).run();
 
 
 var selected = [];
@@ -83,12 +82,12 @@ cy.on('tap', function(e){
       return
     }
     cy.add({data: { id: 'node' + cy.nodes().length, label: label}})
+    cy.layout({name: 'cose'}).run();
 
     /* TODO:
     * If we create a new node, and find that one was already selected.
     * create an edge between the new and last selected. 
     */
-    cy.layout({name: 'breadthfirst'}).run();
   }else{
     // console.log("Clicked: ", e.target.id())
     selected.push(e.target)
@@ -103,6 +102,7 @@ cy.on('tap', function(e){
         }
       });
       selected = []
+      cy.layout({name: 'cose'}).run();
     }
   }
 });

@@ -4,6 +4,8 @@ Uses [Cytoscape.js](https://js.cytoscape.org/) to create simple graphs.
 
 **Usage**
 
+[DEMO](https://pmaynard.github.io/GraphLine/)
+
 1. Add a node by click anywhere on the page. You'll be prompted to add a label. 
 2. Add edges by selecting a node (source) then select another (or same) node for the target.
 
