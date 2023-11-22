@@ -1,0 +1,111 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>GraphLine</title>
+    <script src=" https://cdn.jsdelivr.net/npm/cytoscape/dist/cytoscape.min.js "></script>
+</head>
+
+<style>
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+</style>
+
+<body>
+    <div id="cy"></div>
+    <script>
+var cy = cytoscape({
+  container: document.getElementById('cy'),
+  // elements: [
+  //   { data: { id: 'node0', label: "I am node0" } },
+  //   { data: { id: 'node1', label: "I am node1" } },
+  //   { data: { id: 'node2', label: "I am node2" } },
+  //   { data: { id: 'node3', label: "I am node3" } },
+  // ],
+  style: [
+    {
+      selector: 'node',
+      css: {
+        'content': 'data(label)',
+        'text-valign': 'center',
+        'text-halign': 'center'
+      }
+    },
+    {
+      selector: ':parent',
+      css: {
+        'text-valign': 'top',
+        'text-halign': 'center',
+      }
+    },
+    {
+      selector: 'edge',
+      css: {
+        'curve-style': 'bezier',
+        'target-arrow-shape': 'triangle'
+      }
+    }
+  ],
+});
+
+
+var src = `Become Root 
+  No-auth 
+    Gain user privileges 
+      ftp
+      rsh
+    Local Buffer Overflow
+  Auth
+    ssh 
+    rsa`
+
+src.split("\n").forEach((e) =>
+  cy.add({data: { id: 'node' + cy.nodes().length, label: e.trim()}})
+); 
+
+cy.layout({name: 'breadthfirst'}).run()
+
+
+var selected = [];
+
+/********************************/
+cy.on('tap', function(e){
+  if (e.target === cy) {
+    label = prompt("New node Label");
+
+    if (label == null || label == "") {
+      return
+    }
+    cy.add({data: { id: 'node' + cy.nodes().length, label: label}})
+
+    /* TODO:
+    * If we create a new node, and find that one was already selected.
+    * create an edge between the new and last selected. 
+    */
+    cy.layout({name: 'breadthfirst'}).run();
+  }else{
+    // console.log("Clicked: ", e.target.id())
+    selected.push(e.target)
+    
+    if (selected.length == 2) {
+      // console.log(selected[0].id(), "to", selected[1].id())
+      cy.add({
+        data: {
+          id: 'e' + cy.edges().length,
+          source: selected[0].id(),
+          target: selected[1].id(),
+        }
+      });
+      selected = []
+    }
+  }
+});
+    </script>
+</body>
+</html>
